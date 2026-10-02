@@ -1,0 +1,32 @@
+{
+  "esquema": 1,
+  "actualizado": "2026-10-01",
+  "mapas": [
+    {
+      "id": "piloto-4km",
+      "nombre": "Piloto 4 km (prueba)",
+      "region": "La Araucanía",
+      "version": "2026-10",
+      "area": [
+        -72.644695,
+        -38.697964,
+        -72.541046,
+        -38.617025
+      ],
+      "archivos": [
+        {
+          "tipo": "base",
+          "url": "https://jperezsch.github.io/libreta-mapas-prueba/mapa-piloto-20260930-z15.pmtiles?v=202610",
+          "bytes": 853430
+        },
+        {
+          "tipo": "relieve",
+          "url": "https://jperezsch.github.io/libreta-mapas-prueba/elevacion-piloto-z12.pmtiles?v=202610",
+          "bytes": 2248671
+        }
+      ],
+      "capas": [],
+      "imagenes": []
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#1b5e20">
+<title>Libreta Pro · prototipo de mapa</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="vendor/maplibre-gl.css">
+<style>
+:root{--verde:#1b5e20;--fondo:#ffffff;--texto:#1c1c1c;--suave:#5f6368;--borde:#cfd4d0;--ambar:#f9a825;--rojo:#c62828;--ok:#2e7d32}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--texto);background:#dfe5df;overscroll-behavior:none}
+#app{position:fixed;inset:0}
+#mapa{position:absolute;inset:0;touch-action:none}
+.chip{display:inline-block;padding:6px 10px;border-radius:14px;background:rgba(255,255,255,.94);border:1px solid var(--borde);font-size:13px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.chip.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.chip.ambar{background:var(--ambar);color:#222;border-color:var(--ambar)}
+.chip.rojo{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+#barra{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:8px;right:64px;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none}
+#ctrl{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);right:8px;display:flex;flex-direction:column;gap:8px}
+.btn{min-width:48px;min-height:48px;padding:0 12px;border-radius:12px;border:1px solid var(--borde);background:#fff;color:var(--texto);font-size:15px;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer}
+.btn:active{background:#e8eee8}
+.btn.on{background:var(--verde);color:#fff;border-color:var(--verde)}
+.btn.chico{font-size:12px;min-height:44px}
+.btn:disabled{opacity:.45}
+#btnGuardar{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 18px);min-height:54px;padding:0 22px;border-radius:27px;background:var(--verde);color:#fff;border:2px solid #fff;font-size:16px}
+#tarjeta{position:absolute;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 84px);background:#fff;border:1px solid var(--borde);border-radius:12px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.35);display:none;font-size:14px}
+#tarjeta b{font-size:16px}
+#aviso{position:absolute;left:10px;right:68px;top:calc(env(safe-area-inset-top,0px) + 58px);background:#fff8e1;border:1px solid #f0d58a;border-radius:10px;padding:10px;font-size:14px;display:none}
+#toast{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 90px);background:#222;color:#fff;padding:10px 14px;border-radius:10px;font-size:14px;display:none;max-width:90%;text-align:center}
+#hoja{position:absolute;inset:0;background:rgba(0,0,0,.35);display:none}
+#hoja .panel{position:absolute;left:0;right:0;bottom:0;max-height:88%;background:var(--fondo);border-radius:16px 16px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
+#hoja header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--borde)}
+#hoja header h2{margin:0;font-size:18px}
+#hojaCuerpo{overflow:auto;padding:12px 14px 18px;-webkit-overflow-scrolling:touch}
+.caja{border:1px solid var(--borde);border-radius:12px;padding:12px;margin:0 0 12px}
+.caja h3{margin:0 0 4px;font-size:16px}
+.suave{color:var(--suave);font-size:13px;margin:2px 0}
+.fila{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+progress{width:100%;height:18px}
+.chk{display:flex;align-items:center;gap:12px;min-height:48px;font-size:16px}
+.chk input{width:24px;height:24px}
+pre{white-space:pre-wrap;word-break:break-word;font-size:12px;background:#f3f5f3;border:1px solid var(--borde);border-radius:8px;padding:10px;margin:0 0 10px}
+.maplibregl-ctrl-attrib{font-size:11px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="mapa"></div>
+  <div id="barra">
+    <span class="chip" id="chipMapa">Sin mapa</span>
+    <span class="chip" id="chipGps">GPS apagado</span>
+    <span class="chip" id="chipRed" style="display:none">Sin conexión</span>
+  </div>
+  <div id="ctrl">
+    <button class="btn" id="btnMas" aria-label="Acercar">+</button>
+    <button class="btn" id="btnMenos" aria-label="Alejar">−</button>
+    <button class="btn" id="btnGps" aria-label="GPS y centrar">GPS</button>
+    <button class="btn chico" id="btnCapas">Capas</button>
+    <button class="btn chico" id="btnMapas">Mapas</button>
+    <button class="btn chico" id="btnDiag">Diag.</button>
+  </div>
+  <div id="aviso"></div>
+  <div id="tarjeta"></div>
+  <button class="btn" id="btnGuardar">Guardar punto aquí</button>
+  <div id="toast"></div>
+  <div id="hoja"><div class="panel"><header><h2 id="hojaTitulo"></h2><button class="btn" id="hojaCerrar">Cerrar</button></header><div id="hojaCuerpo"></div></div></div>
+</div>
+<script src="vendor/maplibre-gl.js"></script>
+<script src="vendor/pmtiles.js"></script>
+<script src="vendor/maplibre-contour.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

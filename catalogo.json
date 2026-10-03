@@ -1,6 +1,6 @@
 {
   "esquema": 1,
-  "actualizado": "2026-10-01",
+  "actualizado": "2026-10-02",
   "mapas": [
     {
       "id": "parque_rucamanque",
@@ -23,6 +23,32 @@
           "tipo": "relieve",
           "url": "https://jperezsch.github.io/libreta-mapas-prueba/elevacion-parque_rucamanque-z12.pmtiles?v=202610",
           "bytes": 2248671
+        }
+      ],
+      "capas": [],
+      "imagenes": []
+    },
+    {
+      "id": "cordillera_sarao",
+      "nombre": "Cordillera del Sarao, Purranque",
+      "region": "Región de Los Lagos",
+      "version": "2026-10",
+      "area": [
+        -73.904704,
+        -41.111085,
+        -73.464178,
+        -40.778337
+      ],
+      "archivos": [
+        {
+          "tipo": "base",
+          "url": "https://jperezsch.github.io/libreta-mapas-prueba/mapa-cordillera_sarao-20261002-z15.pmtiles?v=202610",
+          "bytes": 1628245
+        },
+        {
+          "tipo": "relieve",
+          "url": "https://jperezsch.github.io/libreta-mapas-prueba/elevacion-cordillera_sarao-z12.pmtiles?v=202610",
+          "bytes": 6042944
         }
       ],
       "capas": [],

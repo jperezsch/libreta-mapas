@@ -79,6 +79,32 @@
       ],
       "capas": [],
       "imagenes": []
+    },
+    {
+      "id": "quebrada_el_sauce",
+      "nombre": "Quebrada el Sauce, Chimbarongo",
+      "region": "Región de O'Higgins",
+      "version": "2026-10",
+      "area": [
+        -70.97207,
+        -34.869306,
+        -70.85157,
+        -34.77038
+      ],
+      "archivos": [
+        {
+          "tipo": "base",
+          "url": "https://jperezsch.github.io/libreta-mapas-prueba/mapa-quebrada_el_sauce-20261003-z15.pmtiles?v=202610",
+          "bytes": 613898
+        },
+        {
+          "tipo": "relieve",
+          "url": "https://jperezsch.github.io/libreta-mapas-prueba/elevacion-quebrada_el_sauce-z12.pmtiles?v=202610",
+          "bytes": 2031818
+        }
+      ],
+      "capas": [],
+      "imagenes": []
     }
   ]
 }

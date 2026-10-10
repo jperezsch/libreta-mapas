@@ -16,12 +16,12 @@
       "archivos": [
         {
           "tipo": "base",
-          "url": "https://jperezsch.github.io/libreta-mapas-prueba/mapa-parque_rucamanque-20260930-z15.pmtiles?v=202610",
+          "url": "https://jperezsch.github.io/libreta-mapas/mapa-parque_rucamanque-20260930-z15.pmtiles?v=202610",
           "bytes": 853430
         },
         {
           "tipo": "relieve",
-          "url": "https://jperezsch.github.io/libreta-mapas-prueba/elevacion-parque_rucamanque-z12.pmtiles?v=202610",
+          "url": "https://jperezsch.github.io/libreta-mapas/elevacion-parque_rucamanque-z12.pmtiles?v=202610",
           "bytes": 2248671
         }
       ],
@@ -42,12 +42,12 @@
       "archivos": [
         {
           "tipo": "base",
-          "url": "https://jperezsch.github.io/libreta-mapas-prueba/mapa-cordillera_sarao-20261002-z15.pmtiles?v=202610",
+          "url": "https://jperezsch.github.io/libreta-mapas/mapa-cordillera_sarao-20261002-z15.pmtiles?v=202610",
           "bytes": 1628245
         },
         {
           "tipo": "relieve",
-          "url": "https://jperezsch.github.io/libreta-mapas-prueba/elevacion-cordillera_sarao-z12.pmtiles?v=202610",
+          "url": "https://jperezsch.github.io/libreta-mapas/elevacion-cordillera_sarao-z12.pmtiles?v=202610",
           "bytes": 6042944
         }
       ],
@@ -68,12 +68,12 @@
       "archivos": [
         {
           "tipo": "base",
-          "url": "https://jperezsch.github.io/libreta-mapas-prueba/mapa-santiago-20261003-z15.pmtiles?v=202610",
+          "url": "https://jperezsch.github.io/libreta-mapas/mapa-santiago-20261003-z15.pmtiles?v=202610",
           "bytes": 23423588
         },
         {
           "tipo": "relieve",
-          "url": "https://jperezsch.github.io/libreta-mapas-prueba/elevacion-santiago-z12.pmtiles?v=202610",
+          "url": "https://jperezsch.github.io/libreta-mapas/elevacion-santiago-z12.pmtiles?v=202610",
           "bytes": 4259099
         }
       ],
@@ -94,12 +94,12 @@
       "archivos": [
         {
           "tipo": "base",
-          "url": "https://jperezsch.github.io/libreta-mapas-prueba/mapa-quebrada_el_sauce-20261003-z15.pmtiles?v=202610",
+          "url": "https://jperezsch.github.io/libreta-mapas/mapa-quebrada_el_sauce-20261003-z15.pmtiles?v=202610",
           "bytes": 613898
         },
         {
           "tipo": "relieve",
-          "url": "https://jperezsch.github.io/libreta-mapas-prueba/elevacion-quebrada_el_sauce-z12.pmtiles?v=202610",
+          "url": "https://jperezsch.github.io/libreta-mapas/elevacion-quebrada_el_sauce-z12.pmtiles?v=202610",
           "bytes": 2031818
         }
       ],
@@ -120,12 +120,12 @@
       "archivos": [
         {
           "tipo": "base",
-          "url": "https://jperezsch.github.io/libreta-mapas-prueba/mapa-llanos_de_challe-20261009-z15.pmtiles?v=202610",
+          "url": "https://jperezsch.github.io/libreta-mapas/mapa-llanos_de_challe-20261009-z15.pmtiles?v=202610",
           "bytes": 2929723
         },
         {
           "tipo": "relieve",
-          "url": "https://jperezsch.github.io/libreta-mapas-prueba/elevacion-llanos_de_challe-z12.pmtiles?v=202610",
+          "url": "https://jperezsch.github.io/libreta-mapas/elevacion-llanos_de_challe-z12.pmtiles?v=202610",
           "bytes": 15706428
         }
       ],

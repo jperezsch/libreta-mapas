@@ -157,6 +157,32 @@
           "bytes": 2186286
         }
       ]
+    },
+    {
+      "id": "chiloe_norte",
+      "capas": [],
+      "imagenes": [],
+      "nombre": "Chiloé Norte",
+      "region": "Región de Los Lagos",
+      "version": "2026-11",
+      "area": [
+        -74.133063,
+        -42.33755,
+        -73.394137,
+        -41.788964
+      ],
+      "archivos": [
+        {
+          "tipo": "base",
+          "url": "https://jperezsch.github.io/libreta-mapas/mapa-chiloe_norte-20261116-z15.pmtiles?v=202611",
+          "bytes": 3773455
+        },
+        {
+          "tipo": "relieve",
+          "url": "https://jperezsch.github.io/libreta-mapas/elevacion-chiloe_norte-z12.pmtiles?v=202611",
+          "bytes": 7963626
+        }
+      ]
     }
   ]
 }

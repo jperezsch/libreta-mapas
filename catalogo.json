@@ -1,6 +1,6 @@
 {
   "esquema": 1,
-  "actualizado": "2026-10-09",
+  "actualizado": "2026-11-16",
   "mapas": [
     {
       "id": "parque_rucamanque",
@@ -131,6 +131,32 @@
       ],
       "capas": [],
       "imagenes": []
+    },
+    {
+      "id": "la_higuera",
+      "capas": [],
+      "imagenes": [],
+      "nombre": "La Higuera, Elqui",
+      "region": "Región de Coquimbo",
+      "version": "2026-11",
+      "area": [
+        -71.354944,
+        -29.533658,
+        -71.17936,
+        -29.380774
+      ],
+      "archivos": [
+        {
+          "tipo": "base",
+          "url": "https://jperezsch.github.io/libreta-mapas/mapa-la_higuera-20261116-z15.pmtiles?v=202611",
+          "bytes": 491567
+        },
+        {
+          "tipo": "relieve",
+          "url": "https://jperezsch.github.io/libreta-mapas/elevacion-la_higuera-z12.pmtiles?v=202611",
+          "bytes": 2186286
+        }
+      ]
     }
   ]
 }

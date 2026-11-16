@@ -1,0 +1,144 @@
+name: Nueva localidad de mapa
+run-name: "Mapa: ${{ inputs.nombre }} (${{ inputs.modo }})"
+
+# Se ejecuta a mano: pestaña Actions, "Nueva localidad de mapa", "Run workflow".
+# Corta el mapa base y el relieve, actualiza catalogo.json, publica y comprueba.
+
+on:
+  workflow_dispatch:
+    inputs:
+      nombre:
+        description: "Nombre legible (ej.: Parque Rucamanque, Temuco)"
+        required: true
+        type: string
+      region:
+        description: "Región (ej.: Región de La Araucanía)"
+        required: true
+        type: string
+      latitud:
+        description: "Latitud del punto central, grados decimales (ej.: -38.6574947)"
+        required: true
+        type: string
+      longitud:
+        description: "Longitud del punto central, grados decimales (ej.: -72.5928705)"
+        required: true
+        type: string
+      radio_km:
+        description: "Radio de muestreo en km (se agregan 0,5 km de margen)"
+        required: true
+        default: "4"
+        type: string
+      id:
+        description: "Identificador (opcional). Vacío: se arma con el nombre antes de la coma"
+        required: false
+        default: ""
+        type: string
+      zoom_base:
+        description: "Zoom máximo del mapa base (13 a 15)"
+        required: true
+        default: "15"
+        type: string
+      max_mb:
+        description: "Tope del total base + relieve, en MB. Si se supera, baja el zoom"
+        required: true
+        default: "30"
+        type: string
+      modo:
+        description: "publicar, o solo_medir (corta y mide, sin publicar nada)"
+        required: true
+        default: "publicar"
+        type: choice
+        options:
+          - publicar
+          - solo_medir
+
+permissions:
+  contents: write
+  pages: write
+
+# Una sola ejecución a la vez, para que dos pedidos no pisen el catálogo.
+concurrency:
+  group: catalogo-mapas
+  cancel-in-progress: false
+
+jobs:
+  preparar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar pmtiles
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          destino="$RUNNER_TEMP/pm"
+          mkdir -p "$destino"
+          if gh release download --repo protomaps/go-pmtiles --pattern '*Linux_x86_64*.tar.gz' --dir "$destino"; then
+            tar -xzf "$destino"/*.tar.gz -C "$destino"
+          else
+            echo "No se pudo bajar el binario publicado; compilo desde el código fuente."
+            GOBIN="$destino" go install github.com/protomaps/go-pmtiles@latest
+            mv "$destino/go-pmtiles" "$destino/pmtiles"
+          fi
+          chmod +x "$destino/pmtiles"
+          echo "$destino" >> "$GITHUB_PATH"
+          "$destino/pmtiles" version
+
+      - name: Preparar paquetes y catálogo
+        id: preparar
+        env:
+          NOMBRE: ${{ inputs.nombre }}
+          REGION: ${{ inputs.region }}
+          LATITUD: ${{ inputs.latitud }}
+          LONGITUD: ${{ inputs.longitud }}
+          RADIO_KM: ${{ inputs.radio_km }}
+          ID_LOC: ${{ inputs.id }}
+          ZOOM_BASE: ${{ inputs.zoom_base }}
+          MAX_MB: ${{ inputs.max_mb }}
+          MODO: ${{ inputs.modo }}
+        run: |
+          set -euo pipefail
+          extra=()
+          if [ "$MODO" = "solo_medir" ]; then extra+=(--solo-medir); fi
+          python3 herramientas/preparar_localidad.py preparar \
+            --nombre "$NOMBRE" --region "$REGION" \
+            --lat "$LATITUD" --lon "$LONGITUD" --radio-km "$RADIO_KM" \
+            --id "$ID_LOC" --zoom-base "$ZOOM_BASE" --max-mb "$MAX_MB" \
+            --repo-dir . "${extra[@]}"
+
+      - name: Guardar y subir al repositorio
+        if: inputs.modo == 'publicar'
+        env:
+          NOMBRE: ${{ inputs.nombre }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- catalogo.json '*.pmtiles'
+          if git diff --cached --quiet; then
+            echo "No hay cambios que publicar."
+            exit 0
+          fi
+          git commit -m "Agregar o actualizar mapa: $NOMBRE"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Pedir la publicación en GitHub Pages
+        if: inputs.modo == 'publicar'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Los cambios subidos con el token del flujo a veces no inician solos la
+          # publicación de Pages. Se pide explícitamente; si falla, no es grave.
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || echo "No se pudo pedir la publicación; Pages la hará por su cuenta."
+
+      - name: Comprobar lo publicado
+        if: inputs.modo == 'publicar'
+        env:
+          ID_LOC: ${{ steps.preparar.outputs.id }}
+        run: |
+          set -euo pipefail
+          python3 herramientas/preparar_localidad.py verificar --id "$ID_LOC" --repo-dir . --espera 600 --pausa 20

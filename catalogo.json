@@ -1,6 +1,6 @@
 {
   "esquema": 1,
-  "actualizado": "2026-11-16",
+  "actualizado": "2026-11-17",
   "mapas": [
     {
       "id": "parque_rucamanque",
@@ -181,6 +181,32 @@
           "tipo": "relieve",
           "url": "https://jperezsch.github.io/libreta-mapas/elevacion-chiloe_norte-z12.pmtiles?v=202611",
           "bytes": 7963626
+        }
+      ]
+    },
+    {
+      "id": "chiloe_sur",
+      "capas": [],
+      "imagenes": [],
+      "nombre": "Chiloé Sur",
+      "region": "Región de Los Lagos",
+      "version": "2026-11",
+      "area": [
+        -74.361713,
+        -43.482102,
+        -73.609071,
+        -42.933516
+      ],
+      "archivos": [
+        {
+          "tipo": "base",
+          "url": "https://jperezsch.github.io/libreta-mapas/mapa-chiloe_sur-20261116-z15.pmtiles?v=202611",
+          "bytes": 2031041
+        },
+        {
+          "tipo": "relieve",
+          "url": "https://jperezsch.github.io/libreta-mapas/elevacion-chiloe_sur-z12.pmtiles?v=202611",
+          "bytes": 7554053
         }
       ]
     }

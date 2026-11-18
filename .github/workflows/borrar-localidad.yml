@@ -1,0 +1,110 @@
+name: Borrar localidad de mapa
+run-name: "Borrar mapa: ${{ inputs.id }}"
+
+# Se ejecuta desde la app (Config, Gestión de mapas, modo administrador) o a mano:
+# pestaña Actions, "Borrar localidad de mapa", "Run workflow".
+# Quita la entrada de catalogo.json y borra los archivos que ningún otro mapa usa.
+
+on:
+  workflow_dispatch:
+    inputs:
+      id:
+        description: "Identificador del mapa a borrar (ej.: parque_rucamanque)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pages: write
+
+# Misma cola que "Nueva localidad de mapa", para que no se pisen sobre el catálogo.
+concurrency:
+  group: catalogo-mapas
+  cancel-in-progress: false
+
+jobs:
+  borrar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Quitar del catálogo y borrar archivos
+        env:
+          ID_LOC: ${{ inputs.id }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re, sys, datetime, urllib.parse
+
+          idl = os.environ["ID_LOC"].strip()
+          if not re.fullmatch(r"[a-z0-9_]+", idl):
+              sys.exit("Identificador no válido: " + idl)
+
+          with open("catalogo.json", encoding="utf-8") as f:
+              cat = json.load(f)
+          mapas = cat.get("mapas", [])
+          objetivo = [m for m in mapas if m.get("id") == idl]
+          if not objetivo:
+              sys.exit("No hay un mapa con id «" + idl + "» en catalogo.json")
+          resto = [m for m in mapas if m.get("id") != idl]
+
+          EXT = (".pmtiles", ".geojson", ".json", ".csv", ".png", ".jpg", ".jpeg", ".webp")
+
+          def archivos(obj):
+              """Nombres de archivo de la raíz del repositorio citados en cualquier texto de la entrada."""
+              hallados = set()
+              def visita(x):
+                  if isinstance(x, dict):
+                      for v in x.values(): visita(v)
+                  elif isinstance(x, list):
+                      for v in x: visita(v)
+                  elif isinstance(x, str):
+                      ruta = urllib.parse.urlparse(x).path
+                      nombre = os.path.basename(urllib.parse.unquote(ruta))
+                      if nombre and nombre.lower().endswith(EXT) and nombre != "catalogo.json":
+                          hallados.add(nombre)
+              visita(obj)
+              return hallados
+
+          propios = archivos(objetivo)
+          ajenos = archivos(resto)
+          a_borrar = sorted(n for n in propios if n not in ajenos and os.path.isfile(n))
+          conservados = sorted(n for n in propios if n in ajenos)
+
+          cat["mapas"] = resto
+          cat["actualizado"] = datetime.date.today().isoformat()
+          with open("catalogo.json", "w", encoding="utf-8") as f:
+              json.dump(cat, f, ensure_ascii=False, indent=2)
+              f.write("\n")
+
+          for n in a_borrar:
+              os.remove(n)
+              print("Borrado:", n)
+          for n in conservados:
+              print("Se conserva (lo usa otro mapa):", n)
+          print("Mapas que quedan en el catálogo:", len(resto))
+          PY
+
+      - name: Guardar y subir al repositorio
+        env:
+          ID_LOC: ${{ inputs.id }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- catalogo.json '*.pmtiles' '*.geojson' '*.csv'
+          if git diff --cached --quiet; then
+            echo "No hay cambios que publicar."
+            exit 0
+          fi
+          git commit -m "Borrar mapa: $ID_LOC"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Pedir la publicación en GitHub Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || echo "No se pudo pedir la publicación; Pages la hará por su cuenta."

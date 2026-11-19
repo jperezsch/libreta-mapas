@@ -209,6 +209,32 @@
           "bytes": 7554053
         }
       ]
+    },
+    {
+      "id": "nadi_pichidamas",
+      "capas": [],
+      "imagenes": [],
+      "nombre": "Ñadi Pichidamas, Puyehue",
+      "region": "Región de Los Lagos",
+      "version": "2026-11",
+      "area": [
+        -73.143075,
+        -40.906505,
+        -72.538307,
+        -40.447851
+      ],
+      "archivos": [
+        {
+          "tipo": "base",
+          "url": "https://jperezsch.github.io/libreta-mapas/mapa-nadi_pichidamas-20261118-z15.pmtiles?v=202611",
+          "bytes": 3356406
+        },
+        {
+          "tipo": "relieve",
+          "url": "https://jperezsch.github.io/libreta-mapas/elevacion-nadi_pichidamas-z12.pmtiles?v=202611",
+          "bytes": 7188581
+        }
+      ]
     }
   ]
 }

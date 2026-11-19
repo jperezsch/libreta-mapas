@@ -1,6 +1,6 @@
 {
   "esquema": 1,
-  "actualizado": "2026-11-18",
+  "actualizado": "2026-11-19",
   "mapas": [
     {
       "id": "parque_rucamanque",
@@ -207,32 +207,6 @@
           "tipo": "relieve",
           "url": "https://jperezsch.github.io/libreta-mapas/elevacion-chiloe_sur-z12.pmtiles?v=202611",
           "bytes": 7554053
-        }
-      ]
-    },
-    {
-      "id": "pichidamas",
-      "capas": [],
-      "imagenes": [],
-      "nombre": "Pichidamas, Puyehue",
-      "region": "Región de Los Lagos",
-      "version": "2026-11",
-      "area": [
-        -73.19607,
-        -40.955938,
-        -72.472674,
-        -40.407352
-      ],
-      "archivos": [
-        {
-          "tipo": "base",
-          "url": "https://jperezsch.github.io/libreta-mapas/mapa-pichidamas-20261117-z15.pmtiles?v=202611",
-          "bytes": 4764920
-        },
-        {
-          "tipo": "relieve",
-          "url": "https://jperezsch.github.io/libreta-mapas/elevacion-pichidamas-z12.pmtiles?v=202611",
-          "bytes": 9248769
         }
       ]
     }
